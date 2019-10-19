@@ -10,33 +10,7 @@ class BookSearchScreen extends StatefulWidget{
   }
 }
 
-class BookSearchScreenState extends State<BookSearchScreen>{
-
-  Map <dynamic, dynamic> values;
-  List<String> keys=["M","N"];
-
-  func() {
-    var data = dbRef.child("Books").child(mydata);
-    data.once().then((DataSnapshot snapshot) {
-      values = snapshot.value;
-
-    setState(() {
-      keys = values.keys;
-
-    });
-
-    Widget build(BuildContext){
-      return Column{
-        children:<Widget>[
-          Padding(padding: EdgeInsets.all(20.0)
-        ]
-      }
-
-
-
-  }
-  }}
-
-
+class BookSearchScreenState extends State<BookSearchScreen> {
+  Widget build(BuildContext context) {}
 
 }

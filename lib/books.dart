@@ -32,7 +32,7 @@ class bookSearchState extends State<bookSearch> {
                 onTap: () => Navigator.push(
                   context,
                   new MaterialPageRoute(
-                      builder: (context) => new BookSearchScreen(mydata: data)),
+                      builder: (context) => new BookSearchScreen()),
                 ),
               );
             }).toList(),
