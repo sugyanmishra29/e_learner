@@ -1,3 +1,4 @@
+import 'package:e_learner/books.dart';
 import 'package:flutter/material.dart';
 
 class OptionScreen extends StatefulWidget {
@@ -27,7 +28,7 @@ class OptionScreenState extends State<OptionScreen> {
           ),
           body: TabBarView(
             children: [
-              Icon(Icons.directions_car),
+              BooksSearch(),
               Icon(Icons.directions_transit),
               Icon(Icons.directions_bike),
             ],
