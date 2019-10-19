@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'videos.dart';
 
 class OptionScreen extends StatefulWidget {
   @override
@@ -28,7 +29,7 @@ class OptionScreenState extends State<OptionScreen> {
           body: TabBarView(
             children: [
               Icon(Icons.directions_car),
-              Icon(Icons.directions_transit),
+              videoSearch(),
               Icon(Icons.directions_bike),
             ],
           ),
