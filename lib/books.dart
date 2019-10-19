@@ -28,11 +28,10 @@ class bookSearchState extends State<bookSearch> {
             children: _listViewData.reversed.map((data) {
               return ListTile(
                 title: Text(data),
-                //onTap: Animation(),
                 onTap: () => Navigator.push(
                   context,
                   new MaterialPageRoute(
-                      builder: (context) => new BookSearchScreen()),
+                      builder: (context) => new BookSearchScreen(categorySelected: data)),
                 ),
               );
             }).toList(),

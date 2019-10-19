@@ -28,8 +28,8 @@ class OptionScreenState extends State<OptionScreen> {
           appBar: AppBar(
             bottom: TabBar(
               tabs: [
-                Tab(icon: Icon(Icons.directions_car)),
-                Tab(icon: Icon(Icons.directions_transit)),
+                Tab(icon: Icon(Icons.ondemand_video)),
+                Tab(icon: Icon(Icons.book)),
                 Tab(icon: Icon(Icons.directions_bike)),
               ],
             ),
