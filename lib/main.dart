@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'options.dart';
+import 'package:e_learner/auth_page.dart';
 
 void main() => runApp(MaterialApp(
 //  debugShowCheckedModeBanner: false,
@@ -39,7 +39,7 @@ class HomePage extends StatelessWidget {
                       Navigator.push(
                         context,
                         new MaterialPageRoute(
-                            builder: (context) => new OptionScreen()),
+                            builder: (context) => new MyApp()),
                       );
                     },
                   ),

@@ -1,8 +1,16 @@
 import 'package:e_learner/books.dart';
 import 'package:flutter/material.dart';
 import 'videos.dart';
+import 'package:e_learner/services/authentication.dart';
 
 class OptionScreen extends StatefulWidget {
+    OptionScreen({Key key, this.auth, this.userId, this.logoutCallback})
+      : super(key: key);
+
+  final BaseAuth auth;
+  final VoidCallback logoutCallback;
+  final String userId;
+
   @override
   OptionScreenState createState() {
     return new OptionScreenState();
@@ -26,6 +34,12 @@ class OptionScreenState extends State<OptionScreen> {
               ],
             ),
             title: Text('Tabs Demo'),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('Logout',
+                style: new TextStyle(fontSize: 17.0, color: Colors.white)),
+                onPressed: signOut)
+            ],
           ),
           body: TabBarView(
             children: [
@@ -38,4 +52,14 @@ class OptionScreenState extends State<OptionScreen> {
       ),
     );
   }
+
+    signOut() async {
+    try {
+      await widget.auth.signOut();
+      widget.logoutCallback();
+    } catch (e) {
+      print(e);
+    }
+  }
+
 }
