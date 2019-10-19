@@ -1,4 +1,4 @@
-import 'package:e_learner/books.dart';
+import 'books.dart';
 import 'package:flutter/material.dart';
 import 'videos.dart';
 
@@ -30,7 +30,7 @@ class OptionScreenState extends State<OptionScreen> {
           body: TabBarView(
             children: [
               videoSearch(),
-              BooksSearch(),
+              bookSearch(),
               Icon(Icons.directions_bike),
             ],
           ),
