@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import 'booksearch.dart';
 
 final List<String> _listViewData = [
-  "A List View with many Text - Here's one!",
-  "A List View with many Text - Here's another!",
-  "A List View with many Text - Here's more!",
-  "A List View with many Text - Here's more!",
-  "A List View with many Text - Here's more!",
-  "A List View with many Text - Here's more!",
+  "Mathematics","Novels"
 ];
 GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 class bookSearch extends StatefulWidget {
@@ -37,7 +32,7 @@ class bookSearchState extends State<bookSearch> {
                 onTap: () => Navigator.push(
                   context,
                   new MaterialPageRoute(
-                      builder: (context) => new BookSearchScreen()),
+                      builder: (context) => new BookSearchScreen(mydata: data)),
                 ),
               );
             }).toList(),

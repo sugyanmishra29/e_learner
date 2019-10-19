@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
+
+final dbRef = FirebaseDatabase.instance.reference();
 
 class BookSearchScreen extends StatefulWidget{
 
@@ -8,13 +11,32 @@ class BookSearchScreen extends StatefulWidget{
 }
 
 class BookSearchScreenState extends State<BookSearchScreen>{
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-         
 
-      ),
+  Map <dynamic, dynamic> values;
+  List<String> keys=["M","N"];
 
-    );
+  func() {
+    var data = dbRef.child("Books").child(mydata);
+    data.once().then((DataSnapshot snapshot) {
+      values = snapshot.value;
+
+    setState(() {
+      keys = values.keys;
+
+    });
+
+    Widget build(BuildContext){
+      return Column{
+        children:<Widget>[
+          Padding(padding: EdgeInsets.all(20.0)
+        ]
+      }
+
+
+
   }
+  }}
+
+
+
 }
