@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -11,20 +13,16 @@ class videoSearch extends StatefulWidget {
 }
 
 class videoSearchState extends State<videoSearch> {
-
-String res = "videos";
+  Map <dynamic, dynamic> values;
+  String res = "videos";
 
 myFunc() {
 var data= dbRef.child("Books");
-res += "videos";
 data.once().then((DataSnapshot snapshot) {
-  var values = snapshot.value;
-  print (values["Mathematics"]);
-  var keys = [];
-  for (var k in values) keys.add(k);
+  values = snapshot.value;
+  var keys = values.keys;
   setState(() {
-    res += "videos";
-    for (var k in keys) res += k;
+    for (var k in keys) res += " " + k.toString();
   });
 });
 }
@@ -38,8 +36,7 @@ data.once().then((DataSnapshot snapshot) {
           padding: const EdgeInsets.all(15),
           child: Text('Reload',
               style: TextStyle(fontSize: 15, color: Colors.white)),
-          onPressed: () { myFunc();
-          },
+          onPressed: myFunc,
         ),
       ],
     );
