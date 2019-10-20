@@ -172,10 +172,7 @@ class BookSearchScreenState extends State<BookSearchScreen> {
       body: Container(
         child: Column(
           children: <Widget>[
-            RaisedButton(
-              child: Text("Load"),
-              onPressed: myFunc,
-            ),
+
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
@@ -190,6 +187,10 @@ class BookSearchScreenState extends State<BookSearchScreen> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(25.0)))),
               ),
+            ),
+            RaisedButton(
+              child: Text("See suggestions"),
+              onPressed: myFunc,
             ),
             Expanded(
               child: ListView.builder(
