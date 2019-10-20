@@ -31,5 +31,5 @@ The app contains two sections:
 3) Separate section for clubs and departments for uploading reading materials.
 
 ## Bugs
-1) Pressing device back button sends the user back to the home page everytime
+1) Pressing device back button sends the user back to the home page everytime (Added a back button in the app bar/title bar to avoid this issue) 
 2) Videos keep on playing in background even after going back to the previous screen unless pause button is clicked
