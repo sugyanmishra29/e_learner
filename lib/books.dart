@@ -18,8 +18,6 @@ class bookSearchState extends State<bookSearch> {
     return Column(
       children: <Widget>[
         RaisedButton(
-          animationDuration: Duration(milliseconds: 300),
-          color: Colors.blue,
           child: Text('Upload',
               style: TextStyle(fontSize: 15, color: Colors.white)),
           onPressed: () {
