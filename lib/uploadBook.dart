@@ -12,7 +12,7 @@ final dbRef = FirebaseDatabase.instance.reference();
 class UploadScreen extends StatefulWidget {
   UploadScreen() : super();
 
-  final String title = 'Firebase Storage';
+  final String title = 'Upload Book';
 
   @override
   UploadState createState() => UploadState();
