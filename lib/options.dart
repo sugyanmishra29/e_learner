@@ -23,14 +23,13 @@ class OptionScreenState extends State<OptionScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
-        length: 3,
+        length: 2,
         child: Scaffold(
           appBar: AppBar(
             bottom: TabBar(
               tabs: [
                 Tab(icon: Icon(Icons.ondemand_video)),
                 Tab(icon: Icon(Icons.book)),
-                Tab(icon: Icon(Icons.directions_bike)),
               ],
             ),
             title: Text('E_Learner IITG'),
@@ -45,7 +44,6 @@ class OptionScreenState extends State<OptionScreen> {
             children: [
               videoSearch(),
               bookSearch(),
-              Icon(Icons.directions_bike),
             ],
           ),
         ),
