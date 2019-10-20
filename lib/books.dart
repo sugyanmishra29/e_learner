@@ -17,7 +17,11 @@ class bookSearchState extends State<bookSearch> {
   Widget build(BuildContext) {
     return Column(
       children: <Widget>[
+        Container(height: 5,),
         RaisedButton(
+          animationDuration: Duration(milliseconds: 300),
+          color: Colors.blue,
+          padding: const EdgeInsets.all(15),
           child: Text('Upload',
               style: TextStyle(fontSize: 15, color: Colors.white)),
           onPressed: () {

@@ -62,7 +62,8 @@ class UploadState extends State<UploadScreen> {
     });
     dbRef.child("Books").child(_category).child(_entered)
     .set({
-      'Year': _year
+      'Year': _year,
+      'App': 'N'
     });
   }
 

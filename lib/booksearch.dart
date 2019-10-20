@@ -67,7 +67,7 @@ class BookSearchScreenState extends State<BookSearchScreen> {
     if (query.isNotEmpty) {
       List<String> dummyListData = List<String>();
       dummySearchList.forEach((item) {
-        if (item.contains(query)) {
+        if ((item.toLowerCase()).contains(query.toLowerCase())) {
           dummyListData.add(item);
         }
       });
