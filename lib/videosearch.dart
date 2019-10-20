@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:e_learner/chewie_list_item.dart';
 
 final dbRef = FirebaseDatabase.instance.reference();
+final strRef  = FirebaseStorage.instance.ref();
 
 class VideoSearchScreen extends StatefulWidget {
   final String categorySelected;
