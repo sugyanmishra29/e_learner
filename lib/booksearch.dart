@@ -120,13 +120,16 @@ class BookSearchScreenState extends State<BookSearchScreen> {
 
   Future loadImage(item) async {
     StorageReference imgRef;
+    var imgsrc2;
     try {
-      imgRef = storageRef.child(widget.categorySelected).child(item + ".png");
+      imgRef = storageRef.child(widget.categorySelected).child(item + ".jpg");
+      imgsrc2 = await imgRef.getDownloadURL();
     }
     catch (e) {
-      imgRef = storageRef.child(widget.categorySelected).child(item + ".jpg");
+      imgRef = storageRef.child(widget.categorySelected).child(item + ".png");
+      imgsrc2 = await imgRef.getDownloadURL();
     }
-    var imgsrc2 = await imgRef.getDownloadURL();
+
     print(imgsrc);
     setState(() {
       imgsrc = imgsrc2;
