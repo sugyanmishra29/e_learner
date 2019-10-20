@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'booksearch.dart';
+import 'uploadBook.dart';
 
 final List<String> _listViewData = [
   "Mathematics","Novels"
@@ -16,6 +17,17 @@ class bookSearchState extends State<bookSearch> {
   Widget build(BuildContext) {
     return Column(
       children: <Widget>[
+        RaisedButton(
+          child: Text('Upload',
+              style: TextStyle(fontSize: 15, color: Colors.white)),
+          onPressed: () {
+            Navigator.push(
+              context,
+              new MaterialPageRoute(
+                  builder: (context) => new UploadScreen()),
+            );
+          },
+        ),
         Padding(padding: EdgeInsets.all(20.0),
             child: Text(
               'Search by category',
