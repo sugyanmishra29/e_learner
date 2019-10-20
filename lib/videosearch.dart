@@ -25,6 +25,7 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
   
   @override
   void initState() {
+    myFunc();
 //    items.addAll(duplicateItems);
     super.initState();
   }
@@ -34,21 +35,23 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
     print("Data is " + data.toString());
     data.once().then((DataSnapshot snapshot) {
       values = snapshot.value;
-    });
-    setState(() {
+
+      setState(() {
       items.clear();
       for (var k in values.keys)   items.add(k.toString());
+    });
     });
   }
 
   void filterSearchResults(String query) {
     List<String> dummySearchList = List<String>();
 //    dummySearchList.addAll(items);
-    for (var k in values.keys) dummySearchList.add(k.toString());
+    for (var k in values.keys)
+      dummySearchList.add(k.toString());
     if (query.isNotEmpty) {
       List<String> dummyListData = List<String>();
       dummySearchList.forEach((item) {
-        if (item.contains(query)) {
+        if ((item.toLowerCase()).contains(query.toLowerCase())) {
           dummyListData.add(item);
         }
       });
@@ -60,9 +63,12 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
     } else {
       setState(() {
         items.clear();
-        for (var k in values.keys)   items.add(k.toString());
+        for (var k in values.keys)
+          items.add(k.toString());
       });
     }
+    
+   
   }
 
   void _settingModalBottomSheet(item) {
@@ -96,7 +102,20 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("Search for Video"),
+        title: new Text("Search for video"),
+        flexibleSpace: Container(
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+                colors: [
+                  const Color(0xFF3366FF),
+                  const Color(0xFF00CCFF),
+                ],
+                begin: const FractionalOffset(0.0, 0.0),
+                end: const FractionalOffset(1.0, 0.0),
+                stops: [0.0, 1.0],
+                tileMode: TileMode.clamp),
+          ),
+        ),
         actions: <Widget>[
           new FlatButton(
             child: new Text('Upload',
@@ -129,10 +148,10 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
                         borderRadius: BorderRadius.all(Radius.circular(25.0)))),
               ),
             ),
-            RaisedButton(
-              child: Text("See suggestions"),
-              onPressed: myFunc,
-            ),
+            // RaisedButton(
+            //   child: Text("See suggestions"),
+            //   onPressed: myFunc,
+            // ),
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,

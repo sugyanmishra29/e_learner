@@ -23,13 +23,12 @@ class UploadState extends State<UploadScreen> {
   //
   String _path;
   String _extension;
-  FileType _pickType =  (FileType.VIDEO) ;
+  FileType _pickType = (FileType.VIDEO);
   String _entered, _year = 'unknown';
   bool _isButtonDisabled = true;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   List<StorageUploadTask> _tasks = <StorageUploadTask>[];
 
-  
   void openFileExplorer(String v) async {
     try {
       _path = null;
@@ -49,9 +48,12 @@ class UploadState extends State<UploadScreen> {
   }
 
   upload(fileName, filePath, String v) async {
-    
     _extension = fileName.toString().split('.').last;
-    StorageReference storageRef = FirebaseStorage.instance.ref().child("Videos").child(widget.categorySelected).child(_entered+"."+_extension);
+    StorageReference storageRef = FirebaseStorage.instance
+        .ref()
+        .child("Videos")
+        .child(widget.categorySelected)
+        .child(_entered + "." + _extension);
     final StorageUploadTask uploadTask = storageRef.putFile(
       File(filePath),
       StorageMetadata(
@@ -62,25 +64,25 @@ class UploadState extends State<UploadScreen> {
       _tasks.add(uploadTask);
     });
     var url = await (await uploadTask.onComplete).ref.getDownloadURL();
-      dbRef.child("Videos").child(widget.categorySelected).child(_entered).set(
-      {
-        'URL' : url,
-        'Creator' : _year
-      });
+    dbRef
+        .child("Videos")
+        .child(widget.categorySelected)
+        .child(_entered)
+        .set({'URL': url, 'Creator': _year});
 
     // setDownURL(storageRef);
   }
 
-  // setDownURL(StorageReference ref) async 
+  // setDownURL(StorageReference ref) async
   // {
   //   final String url = await ref.getDownloadURL();
-    
+
   //   dbRef.child("Videos").child(widget.categorySelected).set(
   //     {
   //       '${_entered}' : url
   //     });
   // }
-  
+
   String _bytesTransferred(StorageTaskSnapshot snapshot) {
     return '${snapshot.bytesTransferred}/${snapshot.totalByteCount}';
   }
@@ -101,7 +103,24 @@ class UploadState extends State<UploadScreen> {
       home: new Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(
-          title: Text(widget.categorySelected),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context, false),
+          ),
+          title: Text('Upload ' + widget.categorySelected + ' videos'),
+          flexibleSpace: Container(
+            decoration: new BoxDecoration(
+              gradient: new LinearGradient(
+                  colors: [
+                    const Color(0xFF3366FF),
+                    const Color(0xFF00CCFF),
+                  ],
+                  begin: const FractionalOffset(0.0, 0.0),
+                  end: const FractionalOffset(1.0, 0.0),
+                  stops: [0.0, 1.0],
+                  tileMode: TileMode.clamp),
+            ),
+          ),
         ),
         body: new Container(
           padding: EdgeInsets.all(20.0),
@@ -114,13 +133,14 @@ class UploadState extends State<UploadScreen> {
               ),
               TextField(
                 decoration: new InputDecoration.collapsed(
-                    hintText: 'Enter name of the Video.'
-                ),
+                    hintText: 'Enter name of the Video.'),
                 onChanged: (text) {
                   _entered = text;
                   setState(() {
-                    if (_entered.isEmpty) _isButtonDisabled = true;
-                    else _isButtonDisabled = false;
+                    if (_entered.isEmpty)
+                      _isButtonDisabled = true;
+                    else
+                      _isButtonDisabled = false;
                   });
                 },
               ),
@@ -129,8 +149,7 @@ class UploadState extends State<UploadScreen> {
               ),
               TextField(
                 decoration: new InputDecoration.collapsed(
-                    hintText: 'Enter name of creator.'
-                ),
+                    hintText: 'Enter name of creator.'),
                 onChanged: (text) {
                   _year = text;
                 },
@@ -139,7 +158,8 @@ class UploadState extends State<UploadScreen> {
                 height: 20.0,
               ),
               OutlineButton(
-                onPressed: _isButtonDisabled ? null : () => openFileExplorer('1'),
+                onPressed:
+                    _isButtonDisabled ? null : () => openFileExplorer('1'),
                 child: new Text("Select Video"),
               ),
               SizedBox(
@@ -159,7 +179,7 @@ class UploadState extends State<UploadScreen> {
 
   Future<void> downloadFile(StorageReference ref) async {
     final String url = await ref.getDownloadURL();
-    
+
     final http.Response downloadData = await http.get(url);
     final Directory systemTempDir = Directory.systemTemp;
     final File tempFile = File('${systemTempDir.path}/tmp.jpg');
@@ -174,7 +194,7 @@ class UploadState extends State<UploadScreen> {
     final String path = await ref.getPath();
     print(
       'Success!\nDownloaded $name \nUrl: $url'
-          '\npath: $path \nBytes Count :: $byteCount',
+      '\npath: $path \nBytes Count :: $byteCount',
     );
     _scaffoldKey.currentState.showSnackBar(
       SnackBar(
