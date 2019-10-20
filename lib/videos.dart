@@ -18,7 +18,7 @@ class videoSearchState extends State<videoSearch> {
         Padding(padding: EdgeInsets.all(20.0),
             child: Text(
               'Search by category',
-              style: TextStyle(color: Colors.black, fontSize: 20),
+              style: TextStyle(color: Colors.black, fontSize: 20,fontStyle: FontStyle.italic),
             ),
           ),
         Expanded(

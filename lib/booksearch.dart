@@ -172,55 +172,55 @@ class BookSearchScreenState extends State<BookSearchScreen> {
 //    return file;
 //  }
 
-    Widget build(BuildContext context) {
-      return new Scaffold(
-        appBar: new AppBar(
-          title: new Text("Search for book"),
-        ),
-        body: Container(
-          child: Column(
-            children: <Widget>[
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text("Search for book"),
+      ),
+      body: Container(
+        child: Column(
+          children: <Widget>[
 
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  onChanged: (value) {
-                    filterSearchResults(value);
-                  },
-                  controller: editingController,
-                  decoration: InputDecoration(
-                      labelText: "Search",
-                      hintText: "Search",
-                      prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(25.0)))),
-                ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                onChanged: (value) {
+                  filterSearchResults(value);
+                },
+                controller: editingController,
+                decoration: InputDecoration(
+                    labelText: "Search",
+                    hintText: "Search",
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(25.0)))),
               ),
-              Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: items.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: Image.asset(
-                        'images/bookicon.png',
-                        height: 40,
-                        width: 40,
-                      ),
-                      title: Text('${items[index]}'),
-                      subtitle: Text("Something"),
-                      onTap: () {
-                        _settingModalBottomSheet('${items[index]}');
-                      },
+            ),
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: Image.asset(
+                      'images/bookicon.png',
+                      height: 40,
+                      width: 40,
+                    ),
+                    title: Text('${items[index]}'),
+                    subtitle: Text("Something"),
+                    onTap: () {
+                      _settingModalBottomSheet('${items[index]}');
+                    },
 
-                    );
-                  },
-                ),
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
-    }
+      ),
+    );
   }
+}
