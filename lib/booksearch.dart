@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:image_picker_saver/image_picker_saver.dart';
 import 'dart:io';
 import 'dart:convert';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 
 final dbRef = FirebaseDatabase.instance.reference();
 final StorageReference storageRef = FirebaseStorage.instance.ref().child('Books');
@@ -29,36 +30,41 @@ class BookSearchScreenState extends State<BookSearchScreen> {
 
 //  final duplicateItems = List<String>.generate(10000, (i) => "Item $i");
   var items = List<String>();
-  var imgBodyBytes;
+  var imgsrc;
 
   Map <dynamic, dynamic> values;
 
   @override
   void initState() {
+    myFunc();
 //    items.addAll(duplicateItems);
     super.initState();
   }
 
   myFunc() {
-    var data= dbRef.child("Books").child(widget.categorySelected.toString());
-    print("Data is "+data.toString());
+    var data = dbRef.child("Books").child(widget.categorySelected.toString());
+    print("Data is " + data.toString());
     data.once().then((DataSnapshot snapshot) {
       values = snapshot.value;
+
+      setState(() {
+        items.clear();
+        for (var k in values.keys)
+          items.add(k.toString());
+      });
     });
-    setState(() {
-      items.clear();
-      for(var k in values.keys) items.add(k.toString());
-    });
+
   }
 
   void filterSearchResults(String query) {
     List<String> dummySearchList = List<String>();
 //    dummySearchList.addAll(items);
-    for(var k in values.keys) dummySearchList.add(k.toString());
-    if(query.isNotEmpty) {
+    for (var k in values.keys)
+      dummySearchList.add(k.toString());
+    if (query.isNotEmpty) {
       List<String> dummyListData = List<String>();
       dummySearchList.forEach((item) {
-        if(item.contains(query)) {
+        if (item.contains(query)) {
           dummyListData.add(item);
         }
       });
@@ -70,55 +76,62 @@ class BookSearchScreenState extends State<BookSearchScreen> {
     } else {
       setState(() {
         items.clear();
-        for(var k in values.keys) items.add(k.toString());
+        for (var k in values.keys)
+          items.add(k.toString());
       });
     }
-
   }
 
-  void _settingModalBottomSheet(item){
-
+  void _settingModalBottomSheet(item) async {
     // display image in modal
-    StorageReference imgRef;
-    int ty;
-    try{
-      imgRef = storageRef.child(widget.categorySelected).child(item+ "png"); ty=1;
-    }
-    catch(e){
-      imgRef = storageRef.child(widget.categorySelected).child(item+ "jpg"); ty=2;
-    }
-    
-      String imgsrc = getImgsrc(imgRef).toString();
-      print("Image SOURCE is \n" + imgsrc);
-
+    imgsrc = null;
+    await loadImage(item);
 
 
     showModalBottomSheet(
         context: context,
-        builder: (BuildContext bc){
+        builder: (BuildContext bc) {
           return Container(
             height: 240,
             child: new Column(
               children: <Widget>[
                 Image.network(
-                  imgsrc,
+                  imgsrc.toString(),
                   height: 130,
                   width: 130,
                 ),
                 Text(item),
-                Text("Year: "+(values[item])['Year'].toString()),
+                Text("Year: " + (values[item])['Year'].toString()),
                 IconButton(
-                    icon: Icon(Icons.file_download),
-                    tooltip: 'Download PDF.',
-                    onPressed: () {
-                      downloadPdf(storageRef.child(widget.categorySelected).child(item+ ".pdf"));
-                      print('Download button clicked');},
+                  icon: Icon(Icons.file_download),
+                  tooltip: 'Download PDF.',
+                  onPressed: () {
+                    downloadPdf(storageRef.child(widget.categorySelected).child(
+                        item + ".pdf"));
+                    print('Download button clicked');
+                  },
                 ),
               ],
             ),
           );
         }
     );
+  }
+
+  Future loadImage(item) async {
+    StorageReference imgRef;
+    try {
+      imgRef = storageRef.child(widget.categorySelected).child(item + ".png");
+    }
+    catch (e) {
+      imgRef = storageRef.child(widget.categorySelected).child(item + ".jpg");
+    }
+    var imgsrc2 = await imgRef.getDownloadURL();
+    print(imgsrc);
+    setState(() {
+      imgsrc = imgsrc2;
+    });
+    print(imgsrc);
   }
 
   Future<void> downloadPdf(StorageReference ref) async {
@@ -141,16 +154,9 @@ class BookSearchScreenState extends State<BookSearchScreen> {
           '\npath: $path \nBytes Count :: $byteCount',
     );
 
-    var filePath = await ImagePickerSaver.saveFile(fileData: bodyBytes);
-    print("Filepath is - " + filePath.toString());
+    await Share.file('esys pdf', 'esys.pdf', bodyBytes.buffer.asUint8List(), 'application/pdf');
 //    _downloadFile(url, name);
-
   }
-
-  Future<String> getImgsrc(StorageReference ref) async {
-    return ref.getDownloadURL();
-  }
-
 //  Future<File> _downloadFile(String url, String filename) async {
 //    var httpClient = new HttpClient();
 //    var request = await httpClient.getUrl(Uri.parse(url));
@@ -164,7 +170,6 @@ class BookSearchScreenState extends State<BookSearchScreen> {
 //  }
 
   Widget build(BuildContext context) {
-
     return new Scaffold(
       appBar: new AppBar(
         title: new Text("Search for book"),
@@ -185,12 +190,9 @@ class BookSearchScreenState extends State<BookSearchScreen> {
                     hintText: "Search",
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(25.0)))),
               ),
-            ),
-            RaisedButton(
-              child: Text("See suggestions"),
-              onPressed: myFunc,
             ),
             Expanded(
               child: ListView.builder(
@@ -199,13 +201,15 @@ class BookSearchScreenState extends State<BookSearchScreen> {
                 itemBuilder: (context, index) {
                   return ListTile(
                     leading: Image.asset(
-                      'images/IIT_Guwahati_Logo.png',
+                      'images/bookicon.png',
                       height: 40,
                       width: 40,
                     ),
                     title: Text('${items[index]}'),
                     subtitle: Text("Something"),
-                    onTap: (){ _settingModalBottomSheet('${items[index]}');},
+                    onTap: () {
+                      _settingModalBottomSheet('${items[index]}');
+                    },
 
                   );
                 },
@@ -215,7 +219,5 @@ class BookSearchScreenState extends State<BookSearchScreen> {
         ),
       ),
     );
-
   }
-
 }

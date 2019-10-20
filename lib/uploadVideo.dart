@@ -62,9 +62,10 @@ class UploadState extends State<UploadScreen> {
       _tasks.add(uploadTask);
     });
     var url = await (await uploadTask.onComplete).ref.getDownloadURL();
-      dbRef.child("Videos").child(widget.categorySelected).set(
+      dbRef.child("Videos").child(widget.categorySelected).child(_entered).set(
       {
-        _entered : url
+        'URL' : url,
+        'Creator' : _year
       });
 
     // setDownURL(storageRef);

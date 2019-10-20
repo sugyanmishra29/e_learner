@@ -49,6 +49,7 @@ class _ChewieListItemState extends State<ChewieListItem> {
       padding: const EdgeInsets.all(8.0),
       child: Chewie(
         controller: _chewieController,
+        
       ),
     );
   }
