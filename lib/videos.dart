@@ -1,46 +1,42 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'videosearch.dart';
 
-final dbRef = FirebaseDatabase.instance.reference();
+final List<String> _listViewData = [
+  "Computer Science","Mathematics"
+];
 
 class videoSearch extends StatefulWidget {
-
-  videoSearchState createState(){
+  videoSearchState createState() {
     return new videoSearchState();
   }
 }
 
 class videoSearchState extends State<videoSearch> {
-  Map <dynamic, dynamic> values;
-  String res = "videos";
-
-myFunc() {
-var data= dbRef.child("Books");
-data.once().then((DataSnapshot snapshot) {
-  values = snapshot.value;
-  var keys = values.keys;
-  print("KEYS are "+values.toString());
-  setState(() {
-    for (var k in keys) res += " " + k.toString();
-  });
-});
-}
   Widget build(BuildContext) {
     return Column(
       children: <Widget>[
-        Text(res),
-        RaisedButton(
-          animationDuration: Duration(milliseconds: 300),
-          color: Colors.blue,
-          padding: const EdgeInsets.all(15),
-          child: Text('Reload',
-              style: TextStyle(fontSize: 15, color: Colors.white)),
-          onPressed: myFunc,
-        ),
-      ],
+        Padding(padding: EdgeInsets.all(20.0),
+            child: Text(
+              'Search by category',
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
+          ),
+        Expanded(
+          child: ListView(
+            padding: EdgeInsets.all(10.0),
+            children: _listViewData.reversed.map((data) {
+              return ListTile(
+                title: Text(data),
+                onTap: () => Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (context) => new VideoSearchScreen(categorySelected: data)),
+                ),
+              );
+            }).toList(),
+          ),
+          )
+          ]
     );
   }
-
 }
