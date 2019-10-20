@@ -71,34 +71,6 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
    
   }
 
-  void _settingModalBottomSheet(item) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return Container(
-            height: 240,
-            child: new Column(
-              children: <Widget>[
-                Image.asset(
-                  'images/IIT_Guwahati_Logo.png',
-                  height: 130,
-                  width: 130,
-                ),
-                Text(item),
-                Text("Year: " + (values[item])['Year'].toString()),
-                IconButton(
-                  icon: Icon(Icons.file_download),
-                  tooltip: 'Download PDF.',
-                  onPressed: () {
-                    print('Download button clicked');
-                  },
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(

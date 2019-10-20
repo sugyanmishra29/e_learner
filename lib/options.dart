@@ -73,16 +73,16 @@ class OptionScreenState extends State<OptionScreen> {
               ),
             ),
             actions: <Widget>[
-              new FlatButton(
-                onPressed:
-                  _isButtonDisabled ? null : () {
+              IconButton(
+                icon: Icon(Icons.person),
+                tooltip: 'Admin',
+                onPressed: _isButtonDisabled ? null : () {
                   Navigator.push(
                     context,
                     new MaterialPageRoute(
                         builder: (context) => new AdminScreen()),
                   );
                 },
-                child: new Text('Admin'),
               ),
               new FlatButton(
                 child: new Text('Logout',
