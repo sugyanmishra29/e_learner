@@ -33,7 +33,7 @@ class OptionScreenState extends State<OptionScreen> {
                 Tab(icon: Icon(Icons.directions_bike)),
               ],
             ),
-            title: Text('Tabs Demo'),
+            title: Text('E_Learner IITG'),
             actions: <Widget>[
               new FlatButton(
                 child: new Text('Logout',
