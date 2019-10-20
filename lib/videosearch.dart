@@ -103,6 +103,19 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text("Search for video"),
+        flexibleSpace: Container(
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+                colors: [
+                  const Color(0xFF3366FF),
+                  const Color(0xFF00CCFF),
+                ],
+                begin: const FractionalOffset(0.0, 0.0),
+                end: const FractionalOffset(1.0, 0.0),
+                stops: [0.0, 1.0],
+                tileMode: TileMode.clamp),
+          ),
+        ),
         actions: <Widget>[
           new FlatButton(
             child: new Text('Upload',
