@@ -25,6 +25,7 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
   
   @override
   void initState() {
+    myFunc();
 //    items.addAll(duplicateItems);
     super.initState();
   }
@@ -34,21 +35,23 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
     print("Data is " + data.toString());
     data.once().then((DataSnapshot snapshot) {
       values = snapshot.value;
-    });
-    setState(() {
+
+      setState(() {
       items.clear();
       for (var k in values.keys)   items.add(k.toString());
+    });
     });
   }
 
   void filterSearchResults(String query) {
     List<String> dummySearchList = List<String>();
 //    dummySearchList.addAll(items);
-    for (var k in values.keys) dummySearchList.add(k.toString());
+    for (var k in values.keys)
+      dummySearchList.add(k.toString());
     if (query.isNotEmpty) {
       List<String> dummyListData = List<String>();
       dummySearchList.forEach((item) {
-        if (item.contains(query)) {
+        if ((item.toLowerCase()).contains(query.toLowerCase())) {
           dummyListData.add(item);
         }
       });
@@ -60,9 +63,12 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
     } else {
       setState(() {
         items.clear();
-        for (var k in values.keys)   items.add(k.toString());
+        for (var k in values.keys)
+          items.add(k.toString());
       });
     }
+    
+   
   }
 
   void _settingModalBottomSheet(item) {
@@ -129,10 +135,10 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
                         borderRadius: BorderRadius.all(Radius.circular(25.0)))),
               ),
             ),
-            RaisedButton(
-              child: Text("See suggestions"),
-              onPressed: myFunc,
-            ),
+            // RaisedButton(
+            //   child: Text("See suggestions"),
+            //   onPressed: myFunc,
+            // ),
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,

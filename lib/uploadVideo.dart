@@ -101,7 +101,7 @@ class UploadState extends State<UploadScreen> {
       home: new Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(
-          title: Text(widget.categorySelected),
+          title: Text('Upload '+widget.categorySelected+' videos'),
         ),
         body: new Container(
           padding: EdgeInsets.all(20.0),
