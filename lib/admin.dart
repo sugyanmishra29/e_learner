@@ -2,35 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/services.dart';
-import 'package:file_picker/file_picker.dart';
-import 'dart:typed_data';
-import 'package:flutter/foundation.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:image_picker_saver/image_picker_saver.dart';
 import 'dart:io';
-import 'dart:convert';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 
-final dbRef = FirebaseDatabase.instance.reference();
-final StorageReference storageRef = FirebaseStorage.instance.ref().child('Books');
+class AdminScreen extends StatefulWidget {
 
-class BookSearchScreen extends StatefulWidget{
-  final String categorySelected;
-  BookSearchScreen({Key key, this.categorySelected}) : super(key: key);
-
-  BookSearchScreenState createState(){
-    return new BookSearchScreenState();
+  AdminScreenState createState(){
+    return new AdminScreenState();
   }
 }
 
-class BookSearchScreenState extends State<BookSearchScreen> {
+class AdminScreenState extends State<AdminScreen> {
+  final dbRef = FirebaseDatabase.instance.reference();
+  final StorageReference storageRef = FirebaseStorage.instance.ref().child('Books');
 
-  TextEditingController editingController = TextEditingController();
-
-//  final duplicateItems = List<String>.generate(10000, (i) => "Item $i");
   var items = List<String>();
   var imgsrc;
+  String _category;
 
   Map <dynamic, dynamic> values;
 
@@ -42,7 +30,7 @@ class BookSearchScreenState extends State<BookSearchScreen> {
   }
 
   myFunc() {
-    var data = dbRef.child("Books").child(widget.categorySelected.toString());
+    var data = dbRef.child("Books").child(_category.toString());
     print("Data is " + data.toString());
     data.once().then((DataSnapshot snapshot) {
       values = snapshot.value;
@@ -50,7 +38,7 @@ class BookSearchScreenState extends State<BookSearchScreen> {
       setState(() {
         items.clear();
         for (var k in values.keys){
-          if((values[k])['App'] == 'Y')
+          if((values[k])['App'] == 'N')
             items.add(k.toString());
         }
       });
@@ -58,31 +46,34 @@ class BookSearchScreenState extends State<BookSearchScreen> {
 
   }
 
-  void filterSearchResults(String query) {
-    List<String> dummySearchList = List<String>();
-//    dummySearchList.addAll(items);
-    for (var k in values.keys)
-      if((values[k])['App'] == 'Y')
-        dummySearchList.add(k.toString());
-    if (query.isNotEmpty) {
-      List<String> dummyListData = List<String>();
-      dummySearchList.forEach((item) {
-        if (item.contains(query)) {
-          dummyListData.add(item);
-        }
-      });
-      setState(() {
-        items.clear();
-        items.addAll(dummyListData);
-      });
-      return;
-    } else {
-      setState(() {
-        items.clear();
-        for (var k in values.keys)
-          items.add(k.toString());
-      });
-    }
+  dropDown() {
+    return DropdownButton(
+      hint: new Text('Select category.'),
+      value: _category,
+      items: <DropdownMenuItem>[
+        new DropdownMenuItem(
+          child: new Text('Novels'),
+          value: "Novels",
+        ),
+        new DropdownMenuItem(
+          child: new Text('Mathematics'),
+          value: "Mathematics",
+        ),
+        new DropdownMenuItem(
+          child: new Text('Scanned_Notes'),
+          value: "ScannedNotes",
+        ),
+        new DropdownMenuItem(
+          child: new Text('Any'),
+          value: "any",
+        ),
+      ],
+      onChanged: (value) => setState(() {
+        _category = value;
+        myFunc();
+//        _pickType = value;
+      }),
+    );
   }
 
   void _settingModalBottomSheet(item) async {
@@ -95,7 +86,7 @@ class BookSearchScreenState extends State<BookSearchScreen> {
         context: context,
         builder: (BuildContext bc) {
           return Container(
-            height: 240,
+            height: 300,
             child: new Column(
               children: <Widget>[
                 Image.network(
@@ -109,11 +100,15 @@ class BookSearchScreenState extends State<BookSearchScreen> {
                   icon: Icon(Icons.file_download),
                   tooltip: 'Download PDF.',
                   onPressed: () {
-                    downloadPdf(storageRef.child(widget.categorySelected).child(
+                    downloadPdf(storageRef.child(_category).child(
                         item + ".pdf"), item);
                     print('Download button clicked');
                   },
                 ),
+                FlatButton(
+                  child: new Text('Approve'),
+                  onPressed: () {approve(dbRef.child("Books").child(_category).child(item));},
+                )
               ],
             ),
           );
@@ -125,11 +120,11 @@ class BookSearchScreenState extends State<BookSearchScreen> {
     StorageReference imgRef;
     var imgsrc2;
     try {
-      imgRef = storageRef.child(widget.categorySelected).child(item + ".jpg");
+      imgRef = storageRef.child(_category).child(item + ".jpg");
       imgsrc2 = await imgRef.getDownloadURL();
     }
     catch (e) {
-      imgRef = storageRef.child(widget.categorySelected).child(item + ".png");
+      imgRef = storageRef.child(_category).child(item + ".png");
       imgsrc2 = await imgRef.getDownloadURL();
     }
 
@@ -138,6 +133,13 @@ class BookSearchScreenState extends State<BookSearchScreen> {
       imgsrc = imgsrc2;
     });
     print(imgsrc);
+  }
+
+  void approve(updateRef) {
+    updateRef.update({
+      'App': 'Y',
+    });
+    myFunc();
   }
 
   Future<void> downloadPdf(StorageReference ref, String item) async {
@@ -162,42 +164,19 @@ class BookSearchScreenState extends State<BookSearchScreen> {
 
     await Share.file(item, item+'.pdf', bodyBytes.buffer.asUint8List(), 'application/pdf');
   }
-//  Future<File> _downloadFile(String url, String filename) async {
-//    var httpClient = new HttpClient();
-//    var request = await httpClient.getUrl(Uri.parse(url));
-//    var response = await request.close();
-//    var bytes = await consolidateHttpClientResponseBytes(response);
-//    String dir = (await getApplicationDocumentsDirectory()).path;
-//    File file = new File('$dir/$filename');
-//    await file.writeAsBytes(bytes);
-//    print("Downloaded");
-//    return file;
-//  }
 
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("Search for book"),
+        title: new Text("Admin Panel"),
       ),
       body: Container(
         child: Column(
           children: <Widget>[
+            dropDown(),
 
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                onChanged: (value) {
-                  filterSearchResults(value);
-                },
-                controller: editingController,
-                decoration: InputDecoration(
-                    labelText: "Search",
-                    hintText: "Search",
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(25.0)))),
-              ),
             ),
             Expanded(
               child: ListView.builder(
@@ -211,7 +190,7 @@ class BookSearchScreenState extends State<BookSearchScreen> {
                       width: 40,
                     ),
                     title: Text('${items[index]}'),
-                    subtitle: Text("Something"),
+                    subtitle: Text("Click to see more."),
                     onTap: () {
                       _settingModalBottomSheet('${items[index]}');
                     },
