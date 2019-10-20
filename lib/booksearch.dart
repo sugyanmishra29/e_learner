@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter/services.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 final dbRef = FirebaseDatabase.instance.reference();
+final StorageReference storageRef = FirebaseStorage.instance.ref().child('Books');
 
 class BookSearchScreen extends StatefulWidget{
   final String categorySelected;
@@ -34,6 +43,7 @@ class BookSearchScreenState extends State<BookSearchScreen> {
       values = snapshot.value;
     });
     setState(() {
+      items.clear();
       for(var k in values.keys) items.add(k.toString());
     });
   }
@@ -81,13 +91,50 @@ class BookSearchScreenState extends State<BookSearchScreen> {
                 IconButton(
                     icon: Icon(Icons.file_download),
                     tooltip: 'Download PDF.',
-                    onPressed: () { print('Download button clicked');},
+                    onPressed: () {
+                      downloadPdf(storageRef.child(widget.categorySelected).child(item+ ".pdf"));
+                      print('Download button clicked');},
                 ),
               ],
             ),
           );
         }
     );
+  }
+
+  Future<void> downloadPdf(StorageReference ref) async {
+    final String url = await ref.getDownloadURL();
+    print("URL is ...." + url);
+    final http.Response downloadData = await http.get(url);
+    final Directory systemTempDir = Directory.systemTemp;
+    final File tempFile = File('${systemTempDir.path}/tmp.pdf');
+    if (tempFile.existsSync()) {
+      await tempFile.delete();
+    }
+    await tempFile.create();
+    final StorageFileDownloadTask task = ref.writeToFile(tempFile);
+    final int byteCount = (await task.future).totalByteCount;
+    var bodyBytes = downloadData.bodyBytes;
+    final String name = await ref.getName();
+    final String path = await ref.getPath();
+    print(
+      'Success!\nDownloaded $name \nUrl: $url'
+          '\npath: $path \nBytes Count :: $byteCount',
+    );
+    _downloadFile(url, name);
+
+  }
+
+  Future<File> _downloadFile(String url, String filename) async {
+    var httpClient = new HttpClient();
+    var request = await httpClient.getUrl(Uri.parse(url));
+    var response = await request.close();
+    var bytes = await consolidateHttpClientResponseBytes(response);
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    File file = new File('$dir/$filename');
+    await file.writeAsBytes(bytes);
+    print("Downloaded");
+    return file;
   }
 
   Widget build(BuildContext context) {
