@@ -129,9 +129,9 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
                   return Column(
                     children: <Widget>[
                       Text('${items[index]}'),
-                      //onTap: (){ _settingModalBottomSheet('${items[index]}');
                       ChewieListItem(
                         videoPlayerController: VideoPlayerController.network(
+                         //"https://firebasestorage.googleapis.com/v0/b/maximal-relic-220420.appspot.com/o/Videos%2FMathematics%2Fbbb-360p.mp4?alt=media&token=82872377-4806-49e7-9585-d15936247003",
                          values['${items[index]}'].toString(),
                         ),
                         looping: true,
@@ -140,23 +140,6 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
                   );
                 }
               ),
-              // child: ListView.builder(
-              //   shrinkWrap: true,
-              //   itemCount: items.length,
-              //   itemBuilder: (context, index) {
-              //     return ListTile(
-              //       leading: Image.asset(
-              //         'images/IIT_Guwahati_Logo.png',
-              //         height: 40,
-              //         width: 40,
-              //       ),
-              //       title: Text('${items[index]}'),
-              //       subtitle: Text("Something"),
-              //       onTap: (){ _settingModalBottomSheet('${items[index]}');},
-
-              //     );
-              //   },
-              // ),
             ),
           ],
         ),
