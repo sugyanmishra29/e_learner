@@ -7,7 +7,9 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:image_picker_saver/image_picker_saver.dart';
 import 'dart:io';
+import 'dart:convert';
 
 final dbRef = FirebaseDatabase.instance.reference();
 final StorageReference storageRef = FirebaseStorage.instance.ref().child('Books');
@@ -27,6 +29,7 @@ class BookSearchScreenState extends State<BookSearchScreen> {
 
 //  final duplicateItems = List<String>.generate(10000, (i) => "Item $i");
   var items = List<String>();
+  var imgBodyBytes;
 
   Map <dynamic, dynamic> values;
 
@@ -74,6 +77,22 @@ class BookSearchScreenState extends State<BookSearchScreen> {
   }
 
   void _settingModalBottomSheet(item){
+
+    // display image in modal
+    StorageReference imgRef;
+    int ty;
+    try{
+      imgRef = storageRef.child(widget.categorySelected).child(item+ "png"); ty=1;
+    }
+    catch(e){
+      imgRef = storageRef.child(widget.categorySelected).child(item+ "jpg"); ty=2;
+    }
+    
+      String imgsrc = getImgsrc(imgRef).toString();
+      print("Image SOURCE is \n" + imgsrc);
+
+
+
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc){
@@ -81,8 +100,8 @@ class BookSearchScreenState extends State<BookSearchScreen> {
             height: 240,
             child: new Column(
               children: <Widget>[
-                Image.asset(
-                  'images/IIT_Guwahati_Logo.png',
+                Image.network(
+                  imgsrc,
                   height: 130,
                   width: 130,
                 ),
@@ -121,21 +140,28 @@ class BookSearchScreenState extends State<BookSearchScreen> {
       'Success!\nDownloaded $name \nUrl: $url'
           '\npath: $path \nBytes Count :: $byteCount',
     );
-    _downloadFile(url, name);
+
+    var filePath = await ImagePickerSaver.saveFile(fileData: bodyBytes);
+    print("Filepath is - " + filePath.toString());
+//    _downloadFile(url, name);
 
   }
 
-  Future<File> _downloadFile(String url, String filename) async {
-    var httpClient = new HttpClient();
-    var request = await httpClient.getUrl(Uri.parse(url));
-    var response = await request.close();
-    var bytes = await consolidateHttpClientResponseBytes(response);
-    String dir = (await getApplicationDocumentsDirectory()).path;
-    File file = new File('$dir/$filename');
-    await file.writeAsBytes(bytes);
-    print("Downloaded");
-    return file;
+  Future<String> getImgsrc(StorageReference ref) async {
+    return ref.getDownloadURL();
   }
+
+//  Future<File> _downloadFile(String url, String filename) async {
+//    var httpClient = new HttpClient();
+//    var request = await httpClient.getUrl(Uri.parse(url));
+//    var response = await request.close();
+//    var bytes = await consolidateHttpClientResponseBytes(response);
+//    String dir = (await getApplicationDocumentsDirectory()).path;
+//    File file = new File('$dir/$filename');
+//    await file.writeAsBytes(bytes);
+//    print("Downloaded");
+//    return file;
+//  }
 
   Widget build(BuildContext context) {
 
