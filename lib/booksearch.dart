@@ -49,8 +49,10 @@ class BookSearchScreenState extends State<BookSearchScreen> {
 
       setState(() {
         items.clear();
-        for (var k in values.keys)
-          items.add(k.toString());
+        for (var k in values.keys){
+          if((values[k])['App'] == 'Y')
+            items.add(k.toString());
+        }
       });
     });
 
@@ -60,7 +62,8 @@ class BookSearchScreenState extends State<BookSearchScreen> {
     List<String> dummySearchList = List<String>();
 //    dummySearchList.addAll(items);
     for (var k in values.keys)
-      dummySearchList.add(k.toString());
+      if((values[k])['App'] == 'Y')
+        dummySearchList.add(k.toString());
     if (query.isNotEmpty) {
       List<String> dummyListData = List<String>();
       dummySearchList.forEach((item) {

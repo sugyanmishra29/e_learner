@@ -116,6 +116,9 @@ class UploadState extends State<UploadScreen> {
         key: _scaffoldKey,
         appBar: new AppBar(
           title: Text(widget.title),
+            leading: IconButton(icon:Icon(Icons.arrow_back),
+              onPressed:() => Navigator.pop(context, false),
+            )
         ),
         body: new Container(
           padding: EdgeInsets.all(20.0),
