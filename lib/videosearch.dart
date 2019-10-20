@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:video_player/video_player.dart';
+
+import 'package:e_learner/chewie_list_item.dart';
 
 final dbRef = FirebaseDatabase.instance.reference();
 
-class VideoSearchScreen extends StatefulWidget{
+class VideoSearchScreen extends StatefulWidget {
   final String categorySelected;
   VideoSearchScreen({Key key, this.categorySelected}) : super(key: key);
 
-  VideoSearchScreenState createState(){
+  VideoSearchScreenState createState() {
     return new VideoSearchScreenState();
   }
 }
 
 class VideoSearchScreenState extends State<VideoSearchScreen> {
-
   TextEditingController editingController = TextEditingController();
 
-//  final duplicateItems = List<String>.generate(10000, (i) => "Item $i");
   var items = List<String>();
 
-  Map <dynamic, dynamic> values;
-
+  Map<dynamic, dynamic> values;
+  
   @override
   void initState() {
 //    items.addAll(duplicateItems);
@@ -28,24 +29,25 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
   }
 
   myFunc() {
-    var data= dbRef.child("Videos").child(widget.categorySelected.toString());
-    print("Data is "+data.toString());
+    var data = dbRef.child("Videos").child(widget.categorySelected.toString());
+    print("Data is " + data.toString());
     data.once().then((DataSnapshot snapshot) {
       values = snapshot.value;
     });
     setState(() {
-      for(var k in values.keys) items.add(k.toString());
+      items.clear();
+      for (var k in values.keys)   items.add(k.toString());
     });
   }
 
   void filterSearchResults(String query) {
     List<String> dummySearchList = List<String>();
 //    dummySearchList.addAll(items);
-    for(var k in values.keys) dummySearchList.add(k.toString());
-    if(query.isNotEmpty) {
+    for (var k in values.keys) dummySearchList.add(k.toString());
+    if (query.isNotEmpty) {
       List<String> dummyListData = List<String>();
       dummySearchList.forEach((item) {
-        if(item.contains(query)) {
+        if (item.contains(query)) {
           dummyListData.add(item);
         }
       });
@@ -57,16 +59,15 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
     } else {
       setState(() {
         items.clear();
-        for(var k in values.keys) items.add(k.toString());
+        for (var k in values.keys)   items.add(k.toString());
       });
     }
-
   }
 
-  void _settingModalBottomSheet(item){
+  void _settingModalBottomSheet(item) {
     showModalBottomSheet(
         context: context,
-        builder: (BuildContext bc){
+        builder: (BuildContext bc) {
           return Container(
             height: 240,
             child: new Column(
@@ -77,24 +78,24 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
                   width: 130,
                 ),
                 Text(item),
-                Text("Year: "+(values[item])['Year'].toString()),
+                Text("Year: " + (values[item])['Year'].toString()),
                 IconButton(
-                    icon: Icon(Icons.file_download),
-                    tooltip: 'Download PDF.',
-                    onPressed: () { print('Download button clicked');},
+                  icon: Icon(Icons.file_download),
+                  tooltip: 'Download PDF.',
+                  onPressed: () {
+                    print('Download button clicked');
+                  },
                 ),
               ],
             ),
           );
-        }
-    );
+        });
   }
 
   Widget build(BuildContext context) {
-
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("Search for book"),
+        title: new Text("Search for Video"),
       ),
       body: Container(
         child: Column(
@@ -123,25 +124,41 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
                 shrinkWrap: true,
                 itemCount: items.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: Image.asset(
-                      'images/IIT_Guwahati_Logo.png',
-                      height: 40,
-                      width: 40,
-                    ),
-                    title: Text('${items[index]}'),
-                    subtitle: Text("Something"),
-                    onTap: (){ _settingModalBottomSheet('${items[index]}');},
-
+                  return Column(
+                    children: <Widget>[
+                      Text('${items[index]}'),
+                      //onTap: (){ _settingModalBottomSheet('${items[index]}');
+                      ChewieListItem(
+                        videoPlayerController: VideoPlayerController.network(
+                         values['${items[index]}'].toString(),
+                        ),
+                        looping: true,
+                      ),
+                    ],
                   );
-                },
+                }
               ),
+              // child: ListView.builder(
+              //   shrinkWrap: true,
+              //   itemCount: items.length,
+              //   itemBuilder: (context, index) {
+              //     return ListTile(
+              //       leading: Image.asset(
+              //         'images/IIT_Guwahati_Logo.png',
+              //         height: 40,
+              //         width: 40,
+              //       ),
+              //       title: Text('${items[index]}'),
+              //       subtitle: Text("Something"),
+              //       onTap: (){ _settingModalBottomSheet('${items[index]}');},
+
+              //     );
+              //   },
+              // ),
             ),
           ],
         ),
       ),
     );
-
   }
-
 }
