@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:video_player/video_player.dart';
-
+import 'package:e_learner/uploadVideo.dart';
 import 'package:e_learner/chewie_list_item.dart';
 
 final dbRef = FirebaseDatabase.instance.reference();
-final strRef  = FirebaseStorage.instance.ref();
+
 
 class VideoSearchScreen extends StatefulWidget {
   final String categorySelected;
@@ -98,6 +97,19 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text("Search for Video"),
+        actions: <Widget>[
+          new FlatButton(
+            child: new Text('Upload',
+            style: new TextStyle(fontSize: 17.0, color: Colors.white)),
+            onPressed: () {
+            Navigator.push(
+              context,
+              new MaterialPageRoute(
+                  builder: (context) => new UploadScreen(widget.categorySelected)),
+            );
+          },
+          )
+        ],
       ),
       body: Container(
         child: Column(
