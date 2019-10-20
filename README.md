@@ -30,3 +30,6 @@ The app contains two sections:
 2) Download option for downloading books.
 3) Separate section for clubs and departments for uploading reading materials.
 
+## Bugs
+1) Pressing device back button sends the user back to the home page everytime
+2) Videos keep on playing in background even after going back to the previous screen unless pause button is clicked
