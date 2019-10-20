@@ -14,6 +14,7 @@ class HomePage extends StatelessWidget {
     return new MaterialApp(
         title: 'E-Learner IITG',
         home: new Scaffold(
+            resizeToAvoidBottomPadding: false,
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -25,7 +26,7 @@ class HomePage extends StatelessWidget {
                       width: 200,
                   ),
                   Text(
-                    'E - Learner IITG',
+                    '\n\nE - Learner IITG',
                     style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
                   Container(height: 100),
