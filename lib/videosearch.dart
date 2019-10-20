@@ -102,7 +102,7 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("Search for Video"),
+        title: new Text("Search for video"),
         actions: <Widget>[
           new FlatButton(
             child: new Text('Upload',
