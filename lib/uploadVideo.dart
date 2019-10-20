@@ -23,13 +23,13 @@ class UploadState extends State<UploadScreen> {
   //
   String _path;
   String _extension;
-  FileType _pickType;
-  String _category;
+  FileType _pickType =  (FileType.VIDEO) ;
   String _entered, _year = 'unknown';
   bool _isButtonDisabled = true;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   List<StorageUploadTask> _tasks = <StorageUploadTask>[];
 
+  
   void openFileExplorer(String v) async {
     try {
       _path = null;
@@ -48,8 +48,8 @@ class UploadState extends State<UploadScreen> {
     upload(fileName, filePath, v);
   }
 
-  upload(fileName, filePath, String v) {
-    _pickType =  (FileType.VIDEO) ;
+  upload(fileName, filePath, String v) async {
+    
     _extension = fileName.toString().split('.').last;
     StorageReference storageRef = FirebaseStorage.instance.ref().child("Videos").child(widget.categorySelected).child(_entered+"."+_extension);
     final StorageUploadTask uploadTask = storageRef.putFile(
@@ -61,41 +61,25 @@ class UploadState extends State<UploadScreen> {
     setState(() {
       _tasks.add(uploadTask);
     });
-    dbRef.child("Books").child(_category).child(_entered)
-    .set({
-      'Year': _year
-    });
+    var url = await (await uploadTask.onComplete).ref.getDownloadURL();
+      dbRef.child("Videos").child(widget.categorySelected).set(
+      {
+        _entered : url
+      });
+
+    // setDownURL(storageRef);
   }
 
-  dropDown() {
-    return DropdownButton(
-      hint: new Text('Select category.'),
-      value: _category,
-      items: <DropdownMenuItem>[
-        new DropdownMenuItem(
-          child: new Text('Novels'),
-          value: "Novels",
-        ),
-        new DropdownMenuItem(
-          child: new Text('Mathematics'),
-          value: "Mathematics",
-        ),
-        new DropdownMenuItem(
-          child: new Text('Scanned_Notes'),
-          value: "ScannedNotes",
-        ),
-        new DropdownMenuItem(
-          child: new Text('Any'),
-          value: "any",
-        ),
-      ],
-      onChanged: (value) => setState(() {
-        _category = value;
-//        _pickType = value;
-      }),
-    );
-  }
-
+  // setDownURL(StorageReference ref) async 
+  // {
+  //   final String url = await ref.getDownloadURL();
+    
+  //   dbRef.child("Videos").child(widget.categorySelected).set(
+  //     {
+  //       '${_entered}' : url
+  //     });
+  // }
+  
   String _bytesTransferred(StorageTaskSnapshot snapshot) {
     return '${snapshot.bytesTransferred}/${snapshot.totalByteCount}';
   }
@@ -174,6 +158,7 @@ class UploadState extends State<UploadScreen> {
 
   Future<void> downloadFile(StorageReference ref) async {
     final String url = await ref.getDownloadURL();
+    
     final http.Response downloadData = await http.get(url);
     final Directory systemTempDir = Directory.systemTemp;
     final File tempFile = File('${systemTempDir.path}/tmp.jpg');
