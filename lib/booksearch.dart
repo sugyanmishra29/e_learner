@@ -141,14 +141,14 @@ class BookSearchScreenState extends State<BookSearchScreen> {
 
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("Search for book"),
+        title: new Text("Search for Book"),
       ),
       body: Container(
         child: Column(
           children: <Widget>[
 
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(12.0),
               child: TextField(
                 onChanged: (value) {
                   filterSearchResults(value);

@@ -100,12 +100,8 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
       body: Container(
         child: Column(
           children: <Widget>[
-            RaisedButton(
-              child: Text("Load"),
-              onPressed: myFunc,
-            ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(12.0),
               child: TextField(
                 onChanged: (value) {
                   filterSearchResults(value);
@@ -119,6 +115,10 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
                         borderRadius: BorderRadius.all(Radius.circular(25.0)))),
               ),
             ),
+            RaisedButton(
+              child: Text("See suggestions"),
+              onPressed: myFunc,
+            ),
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
@@ -126,7 +126,8 @@ class VideoSearchScreenState extends State<VideoSearchScreen> {
                 itemBuilder: (context, index) {
                   return Column(
                     children: <Widget>[
-                      Text('${items[index]}'),
+                      Text('${items[index]}',
+                      style: TextStyle(color: Colors.black, fontSize: 20,fontStyle: FontStyle.italic),),
                       //onTap: (){ _settingModalBottomSheet('${items[index]}');
                       ChewieListItem(
                         videoPlayerController: VideoPlayerController.network(
