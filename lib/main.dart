@@ -45,7 +45,6 @@ class HomePage extends StatelessWidget {
                     },
                   ),
                   Container(height: 20),
-
                 ],
               ),
             ),
